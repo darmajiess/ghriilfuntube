@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GHRIIL Funtube Fortune</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fff7e6;
+      text-align: center;
+      padding: 2rem;
+    }
+    #gameContainer {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background: #ff6347;
+      color: white;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #ff8265;
+    }
+    .hidden {
+      display: none;
+    }
+    .stick {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      background: #ffe0b2;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    #ghriilLogo {
+      width: 120px;
+      margin-bottom: 1rem;
+    }
+
+    #slideOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff7e6;
+      z-index: 9999;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #slideOverlay img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    #questionImage {
+      max-width: 100%;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    #stickQuestion.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameContainer">
+    <div id="intro">
+      <img id="ghriilLogo" src="GHRIIL 4.png" alt="GHRIIL Logo">
+      <h1>GHRIIL FUNTUBE</h1>
+      <p>Ambil satu stick keberuntungan dan temukan pertanyaan mengejutkan yang menantimu!</p>
+      <button onclick="showInstructions()">Mulai Permainan</button>
+    </div>
+
+    <div id="instructions" class="hidden">
+      <h2>Cara Bermain</h2>
+      <p>Klik tombol "AMBIL STICK", lalu tarik 1 stick yang akan menunjukkan pertanyaan khusus untukmu.</p>
+      <button onclick="drawStick()">AMBIL STICK!</button>
+    </div>
+
+    <div id="result" class="hidden">
+      <div class="stick" id="stickQuestion"></div>
+      <img id="questionImage" src="">
+      <button onclick="drawStick()">Coba Lagi</button>
+    </div>
+  </div>
+
+  <div id="slideOverlay">
+    <img id="slideImage" src="">
+  </div>
+
+  <script>
+    const questions = [
+      "What is the random thing from your camera roll right now?",
+      "Apakah Kamu Pernah Jatuh Cinta pada seseorang yang sudah punya pacar?",
+      "Apa hal paling romantic yang pernah kamu lakukan untuk seseorang?",
+      "Apa Kenangan masa kecil yang paling kamu ingat?",
+      "Apa Pick up line andalan kamu? Sampaikan pada orang yg tidak kamu kenal di ruangan ini?",
+      "Minum 1 gelas beer dingin tanpa jedah",
+      "Apa yang membuat kamu jatuh cinta pada seseorang ?",
+      "Apa kebiasaan aneh yang kamu miliki ?",
+      "Request lagu yang paling kamu rasa keren kepada operator?",
+      "Hal ter-redflag apa dari lawan jenis yang pernah kamu alami?",
+      "Hal ter-greenflag apa dari lawan jenis yang pernah kamu alami?",
+      "What you think the most underrated greenflag about person ?",
+      "Hal apa yang orang orang sering salah paham terhadap kamu ?",
+      "Jika dapat Kembali ke masa lalu, hal apa yang ingin kamu sampaikan kepada dirimu?",
+      "Apa rasa takut atau rasa tidak nyaman yang telah kamu atasi dan membuatmu bangga?",
+      "Apa pengalaman yang paling menakutkan yang pernah kamu alami?",
+      "Apa hal terbodoh yang pernah kamu beli?",
+      "Traktir 1 macam menu, untuk meja yang tidak kamu kenal",
+      "Apa pickup line yang ter awkward yang pernah kamu dengar ?",
+      "Tanpa memberitahu temanmu, kirimkan sebuat pesan WA kepada teman semeja mu",
+      "Apa hal terspontan yang pernah kamu lakukan?",
+      "Ajak orang yang kamu tidak kenal di ruangan ini untuk melakukan cheers",
+      "Sebutkan salah satu anggota tubuhmu yang paling kamu banggakan?",
+      "Apakah kamu pernah menolong orang lain tanpa mereka tahu?",
+      "Apa yang kamu harap orang lain lihat dari dirimu?",
+      "Apakah kamu percaya terhadap takdir?",
+      "Jika tidak di ruangan ini ajak orang yang kamu sukai untuk berlibur Bersama",
+      "Apa hal yang paling kamu nikmati saat sendirian?",
+      "Siapa teman masa kecil yang paling berkesan bagi kamu?",
+      "Apakah kamu pernah merasa cemburu terhadap seseorang dari grup ini ?"
+    ];
+
+    const slideImages = ["1.png", "2.png", "3.png", "4.png"];
+
+    function showInstructions() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('instructions').classList.remove('hidden');
+    }
+
+    function drawStick() {
+      const overlay = document.getElementById("slideOverlay");
+      const slideImg = document.getElementById("slideImage");
+      const questionImg = document.getElementById("questionImage");
+      const questionText = document.getElementById("stickQuestion");
+
+      let current = 0;
+      overlay.style.display = "flex";
+      slideImg.src = slideImages[current];
+
+      questionText.classList.add("hidden");
+
+      const slideInterval = setInterval(() => {
+        current++;
+        if (current >= slideImages.length) {
+          clearInterval(slideInterval);
+          overlay.style.display = "none";
+
+          const randomIndex = Math.floor(Math.random() * questions.length);
+          const question = questions[randomIndex];
+          const imagePath = `Question${randomIndex + 1}.png`;
+
+          const img = new Image();
+          img.onload = () => {
+            questionImg.src = imagePath;
+            questionImg.style.display = "block";
+            questionText.classList.add("hidden");
+          };
+          img.onerror = () => {
+            questionImg.style.display = "none";
+            questionText.innerText = question;
+            questionText.classList.remove("hidden");
+          };
+          img.src = imagePath;
+
+          document.getElementById('instructions').classList.add('hidden');
+          document.getElementById('result').classList.remove('hidden');
+          return;
+        }
+        slideImg.src = slideImages[current];
+      }, 800);
+    }
+  </script>
+</body>
+</html>
